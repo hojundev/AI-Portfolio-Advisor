@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Lenis from "lenis";
 import { CountUp } from "./ui.jsx";
 import {
@@ -224,10 +224,12 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
   const [live, setLive] = useState(false);
   const [frameScale, setFrameScale] = useState(0.66);
   const frameRef = useRef(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!live) return;
     const measure = () => setFrameScale((frameRef.current?.clientWidth || 950) / 1440);
     measure();
+    // keyboard users activated a button that just unmounted; land them in the app
+    frameRef.current?.querySelector("iframe")?.focus();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, [live]);
