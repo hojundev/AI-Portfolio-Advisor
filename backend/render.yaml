@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: portfolio-optimizer-api
+    runtime: python
+    plan: free
+    # Run from backend/ where requirements.txt lives and app.main resolves.
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      # Set these in the Render dashboard (sync:false = not read from this file,
+      # and never commit real keys to the repo).
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
