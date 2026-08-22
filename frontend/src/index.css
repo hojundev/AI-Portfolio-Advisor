@@ -466,6 +466,14 @@ input.demo-range::-moz-range-thumb {
   animation: floatY 5.5s ease-in-out infinite alternate;
 }
 
+/* the italic serif F sits optically high-left inside its circle (descender
+   space pushes cap glyphs up; the italic leans the mass); nudge to center */
+.logo-f {
+  display: block;
+  line-height: 1;
+  transform: translate(-2%, 4%);
+}
+
 /* first-load intro: a staged cascade with expo-out easing.
    Everything uses fill-mode both, so the reduced-motion block's 0.001s
    override still ends with content fully visible. */

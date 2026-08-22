@@ -9,6 +9,7 @@ import {
   Link2,
   MessageCircleQuestion,
   Moon,
+  Play,
   Sun,
 } from "lucide-react";
 import { UNIVERSE } from "../data/universe.js";
@@ -219,6 +220,18 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
     return () => lenis.destroy();
   }, []);
 
+  // hero preview flips from screenshot to the REAL app in a scaled frame
+  const [live, setLive] = useState(false);
+  const [frameScale, setFrameScale] = useState(0.66);
+  const frameRef = useRef(null);
+  useEffect(() => {
+    if (!live) return;
+    const measure = () => setFrameScale((frameRef.current?.clientWidth || 950) / 1440);
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [live]);
+
   return (
     <div ref={ref} className="min-h-screen bg-bg text-ink">
       {/* compact floating nav — logo + links clustered left, actions right */}
@@ -233,7 +246,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
               className="flex items-center gap-2"
               aria-label="Back to top"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-serif text-sm italic text-bg" aria-hidden="true">F</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink font-serif text-sm italic text-bg" aria-hidden="true"><span className="logo-f">F</span></span>
               <span className="text-[15px] font-semibold tracking-tight">Folio</span>
             </button>
             <div className="hidden items-center gap-0.5 text-[13.5px] font-medium text-ink2 md:flex">
@@ -350,11 +363,12 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
             ))}
           </div>
 
-          {/* product preview — the real dashboard, mounted on a matte card with
-              an angled sheet behind; animates in, floats, and tilts with the cursor */}
+          {/* product preview — a screenshot until clicked, then the REAL app
+              running in a scaled frame. Tilt/float pause while it's live. */}
           <div
             className="relative mx-auto mt-14 max-w-5xl"
             onMouseMove={(e) => {
+              if (live) return;
               const el = e.currentTarget;
               if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
               const r = el.getBoundingClientRect();
@@ -374,17 +388,46 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
               aria-hidden="true"
             />
             <div className="anim-card-in relative z-10">
-              <div className="float-slow">
-                <div className="hero-tilt img-blend rounded-[22px] border border-line bg-panel p-2 sm:p-2.5" style={{ boxShadow: "var(--shadow-pop)" }}>
-                  <img
-                    src={theme === "light" ? "/shot-hero-light.webp" : "/shot-hero.webp"}
-                    alt="The Folio dashboard: builder, allocation donut, live metrics, briefing and advisor chat"
-                    width={3840}
-                    height={2571}
-                    loading="eager"
-                    fetchpriority="high"
-                    className="block h-auto w-full rounded-[14px]"
-                  />
+              <div className={live ? "" : "float-slow"}>
+                <div
+                  className={`${live ? "" : "hero-tilt img-blend"} rounded-[22px] border border-line bg-panel p-2 sm:p-2.5`}
+                  style={{ boxShadow: "var(--shadow-pop)" }}
+                >
+                  {live ? (
+                    <div ref={frameRef} className="relative w-full overflow-hidden rounded-[14px]" style={{ aspectRatio: "1440 / 900" }}>
+                      <iframe
+                        src="/#app"
+                        title="Folio live dashboard"
+                        className="absolute left-0 top-0 origin-top-left border-0"
+                        style={{ width: 1440, height: 900, transform: `scale(${frameScale})` }}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setLive(true)}
+                      aria-label="Load the live dashboard right here"
+                      className="group relative block w-full cursor-pointer"
+                    >
+                      <img
+                        src={theme === "light" ? "/shot-hero-light.webp" : "/shot-hero.webp"}
+                        alt="The Folio dashboard: builder, allocation donut, live metrics, briefing and advisor chat"
+                        width={3840}
+                        height={2571}
+                        loading="eager"
+                        fetchpriority="high"
+                        className="block h-auto w-full rounded-[14px]"
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center rounded-[14px] bg-black/0 transition group-hover:bg-black/10" aria-hidden="true">
+                        <span
+                          className="flex translate-y-1 items-center gap-2 rounded-full px-5 py-2.5 text-[13.5px] font-semibold opacity-0 shadow-lg transition group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                          style={{ background: "var(--cta-bg)", color: "var(--cta-ink)" }}
+                        >
+                          <Play size={13} fill="currentColor" /> Drive it live
+                        </span>
+                      </span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -644,7 +687,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink font-serif text-base italic text-bg" aria-hidden="true">F</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink font-serif text-base italic text-bg" aria-hidden="true"><span className="logo-f">F</span></span>
                 <span className="text-[15px] font-semibold tracking-tight">Folio</span>
               </div>
               <p className="mt-3 max-w-xs text-[13px] leading-6 text-ink3">

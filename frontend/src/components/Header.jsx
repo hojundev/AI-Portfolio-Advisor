@@ -22,7 +22,7 @@ export default function Header({ theme, session, onToggleTheme, onShare, onSetti
         aria-label="Back to the Folio home page"
       >
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink text-lg font-semibold text-bg" aria-hidden="true">
-          <span className="font-serif italic">F</span>
+          <span className="logo-f font-serif italic">F</span>
         </span>
         <span>
           <span className="block text-[17px] font-semibold leading-tight tracking-tight text-ink">Folio</span>

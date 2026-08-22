@@ -160,7 +160,7 @@ export default function Login({ onSignedIn, onGuest, onBack }) {
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 pb-16">
         <div className="anim-fade-up w-full max-w-[360px]">
           <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-ink font-serif text-xl italic text-bg" aria-hidden="true">
-            F
+            <span className="logo-f">F</span>
           </div>
           <h1 className="mt-5 text-center text-xl font-semibold tracking-tight">Sign in to Folio</h1>
           <p className="mt-1.5 text-center text-[13px] text-ink3">
