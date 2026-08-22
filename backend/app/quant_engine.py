@@ -30,7 +30,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from data import daily_returns, fetch_prices
+from app.data import daily_returns, fetch_prices
 
 logger = logging.getLogger(__name__)
 

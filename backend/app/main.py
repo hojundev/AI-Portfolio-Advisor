@@ -8,9 +8,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import AnalyzeRequest, AnalyzeResponse
-from app.quant import calculate_optimal_portfolio
-from app.presets import get_preset_tickers
+from app.quant_engine import calculate_optimal_portfolio, compute_metrics
+from app.presets import get_presets as _get_presets, get_preset
 from app.ai_insight import generate_insight
+from app.data import DataError
 
 app = FastAPI(title="AI Portfolio Optimizer API")
 
@@ -30,27 +31,51 @@ def health_check():
     return {"status": "ok", "service": "portfolio-optimizer-api"}
 
 
+@app.get("/api/presets")
+def get_presets():
+    """List the fixed company presets for the frontend's left-panel tabs."""
+    return {"presets": _get_presets()}
+
+
 @app.post("/api/analyze", response_model=AnalyzeResponse)
 def analyze(payload: AnalyzeRequest):
-    # --- Resolve tickers from either mode ---
-    if payload.mode == "preset":
-        if not payload.preset_id:
-            raise HTTPException(status_code=400, detail="preset_id is required when mode is 'preset'")
-        try:
-            tickers = get_preset_tickers(payload.preset_id)
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e))
-    elif payload.mode == "custom":
-        if not payload.tickers or len(payload.tickers) == 0:
-            raise HTTPException(status_code=400, detail="tickers list is required when mode is 'custom'")
-        tickers = [t.upper().strip() for t in payload.tickers]
-    else:
-        raise HTTPException(status_code=400, detail="mode must be 'custom' or 'preset'")
-
-    # --- Run the quant engine (Role 1's function) ---
+    # --- Run the quant engine depending on mode ---
+    #   preset : FIXED firm allocation, scored as-is (not optimized)
+    #   custom : user tickers, optimized via spectral selection
     try:
-        result = calculate_optimal_portfolio(tickers)
-    except ValueError as e:
+        if payload.mode == "preset":
+            if not payload.preset_id:
+                raise HTTPException(
+                    status_code=400,
+                    detail="preset_id is required when mode is 'preset'",
+                )
+            preset = get_preset(payload.preset_id)
+            if preset is None:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Unknown preset_id: {payload.preset_id}",
+                )
+            # Presets are FIXED firm allocations: score them, don't optimize.
+            tickers = [a["ticker"] for a in preset["allocations"]]
+            weights = [a["weight"] for a in preset["allocations"]]
+            result = compute_metrics(tickers, weights)
+
+        elif payload.mode == "custom":
+            if not payload.tickers or len(payload.tickers) == 0:
+                raise HTTPException(
+                    status_code=400,
+                    detail="tickers list is required when mode is 'custom'",
+                )
+            tickers = [t.upper().strip() for t in payload.tickers]
+            result = calculate_optimal_portfolio(tickers)
+
+        else:
+            raise HTTPException(status_code=400, detail="mode must be 'custom' or 'preset'")
+
+    except HTTPException:
+        raise
+    except (DataError, ValueError) as e:
+        # Bad tickers / insufficient history / invalid input -> client error.
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Quant engine failed: {e}")
