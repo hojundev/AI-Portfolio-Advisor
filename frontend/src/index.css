@@ -46,3 +46,12 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(139, 92, 246, 0.3);
   color: white;
 }
+
+.light-mode .bg-white\/\[0\.035\] { background-color: rgba(255,255,255,.88) !important; }
+.light-mode .bg-white\/\[0\.04\], .light-mode .bg-white\/\[0\.03\], .light-mode .bg-black\/10, .light-mode .bg-black\/20 { background-color: rgba(248,250,252,.86) !important; }
+.light-mode .border-white\/\[0\.08\], .light-mode .border-white\/\[0\.07\], .light-mode .border-white\/\[0\.06\], .light-mode .border-white\/10 { border-color: #e2e8f0 !important; }
+.light-mode .text-zinc-100, .light-mode .text-white { color: #0f172a !important; }
+.light-mode .text-zinc-400, .light-mode .text-zinc-500 { color: #64748b !important; }
+.light-mode .text-zinc-600 { color: #94a3b8 !important; }
+.light-mode .bg-\[\#151518\] { background-color: #ffffff !important; }
+.light-mode .shadow-2xl { box-shadow: 0 20px 50px rgba(15,23,42,.08) !important; }

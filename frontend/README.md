@@ -8,6 +8,15 @@ Modern responsive financial portfolio dashboard built with:
 - Recharts
 - Lucide React
 
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Open the URL shown by Vite, normally http://localhost:5173.
+
 ## Features
 
 - Dynamic portfolio tabs
