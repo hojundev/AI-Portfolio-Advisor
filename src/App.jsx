@@ -11,6 +11,8 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
+  Sun,
+  Moon,
   Trash2,
   TrendingUp,
   X,
@@ -77,6 +79,8 @@ function App() {
   const [newPortfolioName, setNewPortfolioName] = useState("");
   const [search, setSearch] = useState("");
   const [chatInput, setChatInput] = useState("");
+  const [lightMode, setLightMode] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const [messages, setMessages] = useState([
     {
@@ -224,7 +228,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100">
+    <div className={`min-h-screen transition-colors duration-300 ${lightMode ? "light-mode bg-slate-100 text-slate-900" : "bg-[#09090b] text-zinc-100"}`}>
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl" />
         <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-cyan-500/5 blur-3xl" />
@@ -247,10 +251,28 @@ function App() {
               <Activity size={14} className="text-emerald-400" />
               Markets open
             </div>
-            <button className="rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-zinc-400 transition hover:bg-white/[0.08] hover:text-white">
+            <button onClick={() => setLightMode(v => !v)} className={`rounded-xl border p-2.5 transition ${lightMode ? "border-slate-300 bg-white text-slate-700 hover:bg-slate-200" : "border-white/10 bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:text-white"}`} title={lightMode ? "Switch to dark mode" : "Switch to light mode"}>
+              {lightMode ? <Moon size={17} /> : <Sun size={17} />}
+            </button>
+            <button className={`rounded-xl border p-2.5 transition ${lightMode ? "border-slate-300 bg-white text-slate-700 hover:bg-slate-200" : "border-white/10 bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] hover:text-white"}`}>
               <Sparkles size={17} />
             </button>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-800 text-sm font-semibold">AM</div>
+            <div className="relative">
+              <button onClick={() => setProfileOpen(v => !v)} className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${lightMode ? "bg-slate-800 text-white hover:bg-slate-700" : "bg-zinc-800 text-white hover:bg-zinc-700"}`}>AM</button>
+              {profileOpen && (
+                <div className={`absolute right-0 top-12 z-40 w-56 rounded-xl border p-2 shadow-2xl ${lightMode ? "border-slate-200 bg-white text-slate-900" : "border-white/10 bg-[#151518] text-white"}`}>
+                  <div className="px-3 py-2">
+                    <p className={`text-sm font-semibold ${lightMode ? "text-slate-900" : "text-white"}`}>Ahmed Mostafa</p>
+                    <p className={`text-xs ${lightMode ? "text-slate-500" : "text-zinc-500"}`}>Portfolio user</p>
+                  </div>
+                  <div className={`my-1 border-t ${lightMode ? "border-slate-200" : "border-white/10"}`} />
+                  <button onClick={() => setLightMode(v => !v)} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition ${lightMode ? "text-slate-700 hover:bg-slate-100 hover:text-slate-950" : "text-zinc-300 hover:bg-white/[0.08] hover:text-white"}`}>
+                    {lightMode ? <Moon size={15} /> : <Sun size={15} />}
+                    {lightMode ? "Dark mode" : "Light mode"}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -291,31 +313,10 @@ function App() {
               <div className="rounded-lg bg-violet-500/10 p-2 text-violet-300"><CircleDollarSign size={17} /></div>
             </div>
 
-            <div className="relative mb-5">
-              <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search stocks..."
-                className="w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-10 pr-4 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-violet-500/50"
-              />
-              {searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-xl border border-white/10 bg-[#151518] shadow-2xl">
-                  {searchResults.map((stock) => (
-                    <button
-                      key={stock.ticker}
-                      onClick={() => addStock(stock)}
-                      className="flex w-full items-center justify-between px-4 py-3 text-left transition hover:bg-white/[0.06]"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold">{stock.ticker}</p>
-                        <p className="text-xs text-zinc-500">{stock.name}</p>
-                      </div>
-                      <span className="rounded-lg bg-violet-500/10 px-2 py-1 text-xs text-violet-300">Add</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className={`mb-5 rounded-xl border p-3 ${lightMode ? "border-slate-200 bg-slate-50" : "border-white/[0.06] bg-black/10"}`}>
+              <p className={`text-xs leading-5 ${lightMode ? "text-slate-600" : "text-zinc-500"}`}>
+                Portfolio details are view-only for users. Holdings and allocations cannot be edited from this page.
+              </p>
             </div>
 
             <div className="mb-3 flex items-center justify-between">
@@ -336,30 +337,15 @@ function App() {
                           <p className="max-w-[150px] truncate text-[11px] text-zinc-500">{info?.name}</p>
                         </div>
                       </div>
-                      <button onClick={() => removeStock(stock.ticker)} className="rounded-lg p-1.5 text-zinc-600 opacity-0 transition hover:bg-red-500/10 hover:text-red-400 group-hover:opacity-100">
-                        <Trash2 size={15} />
-                      </button>
+                      
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={stock.allocation}
-                        onChange={(e) => updateAllocation(stock.ticker, e.target.value)}
-                        className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-zinc-800 accent-violet-500"
-                      />
-                      <div className="flex items-center rounded-lg border border-white/10 bg-black/20 px-2">
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={stock.allocation}
-                          onChange={(e) => updateAllocation(stock.ticker, e.target.value)}
-                          className="w-10 bg-transparent py-1.5 text-right text-xs font-semibold text-white outline-none"
-                        />
-                        <span className="text-xs text-zinc-600">%</span>
+                      <div className={`h-1.5 flex-1 overflow-hidden rounded-full ${lightMode ? "bg-slate-200" : "bg-zinc-800"}`}>
+                        <div className="h-full rounded-full bg-violet-500 transition-all duration-500" style={{ width: `${stock.allocation}%` }} />
+                      </div>
+                      <div className={`min-w-[58px] rounded-lg border px-2 py-1.5 text-center text-xs font-semibold ${lightMode ? "border-slate-200 bg-slate-50 text-slate-700" : "border-white/10 bg-black/20 text-white"}`}>
+                        {stock.allocation}%
                       </div>
                     </div>
                   </div>
