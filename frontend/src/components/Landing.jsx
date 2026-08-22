@@ -316,7 +316,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
                 removed (baked alpha) so only the objects sit on the black */}
             <div className="hidden xl:block">
               <img src="/props/laptop-dark.webp" alt="" className="prop-tr absolute right-[-100px] top-[-10px] w-[460px]" loading="lazy" fetchpriority="low" />
-              <img src="/props/money-dark.webp" alt="" className="absolute left-[-190px] top-[-30px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
+              <img src="/props/money-dark.webp" alt="" className="absolute left-[-160px] top-[-230px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
               <img src="/props/keyboard-dark.webp" alt="" className="prop-bl absolute left-[-160px] top-[470px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
             </div>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, var(--bg))" }} />
@@ -328,7 +328,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
                 All lazy + low priority: hidden below xl (never fetched there),
                 and on xl they must not compete with the LCP hero screenshot */}
             <img src="/props/laptop.jpg" alt="" className="prop-fade prop-tr absolute right-[-100px] top-[-10px] w-[460px]" loading="lazy" fetchpriority="low" />
-            <img src="/props/money-full.jpg" alt="" className="prop-fade absolute left-[-190px] top-[-30px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
+            <img src="/props/money-full.jpg" alt="" className="prop-fade absolute left-[-160px] top-[-230px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
             <img src="/props/keyboard.jpg" alt="" className="prop-fade prop-bl absolute left-[-160px] top-[470px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
           </div>
         )}
