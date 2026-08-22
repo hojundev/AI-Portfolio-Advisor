@@ -466,6 +466,50 @@ input.demo-range::-moz-range-thumb {
   animation: floatY 5.5s ease-in-out infinite alternate;
 }
 
+/* first-load intro: a staged cascade with expo-out easing.
+   Everything uses fill-mode both, so the reduced-motion block's 0.001s
+   override still ends with content fully visible. */
+@keyframes introNav {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.intro-nav {
+  animation: introNav 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes introRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.intro-rise {
+  animation: introRise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* headline lines slide up from behind a clip. The mask wrapper carries
+   pb/-mb 0.12em so descenders (q, y, p) are never cut at rest. */
+@keyframes introLine {
+  from {
+    transform: translateY(112%);
+  }
+  to {
+    transform: none;
+  }
+}
+.intro-line {
+  display: block;
+  animation: introLine 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* hero preview: staged entrance + cursor tilt */
 @keyframes heroCardIn {
   from {
@@ -488,10 +532,11 @@ input.demo-range::-moz-range-thumb {
   }
 }
 .anim-card-in {
-  animation: heroCardIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  /* lands after the text cascade finishes its rise */
+  animation: heroCardIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
 }
 .anim-sheet-in {
-  animation: heroSheetIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+  animation: heroSheetIn 1s cubic-bezier(0.16, 1, 0.3, 1) 0.66s both;
 }
 .hero-tilt {
   transform: perspective(1200px) rotateY(var(--tx, 0deg)) rotateX(var(--ty, 0deg));

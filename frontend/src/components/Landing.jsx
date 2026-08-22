@@ -222,7 +222,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
   return (
     <div ref={ref} className="min-h-screen bg-bg text-ink">
       {/* compact floating nav — logo + links clustered left, actions right */}
-      <nav className="sticky top-3 z-40 px-4">
+      <nav className="intro-nav sticky top-3 z-40 px-4">
         <div
           className="mx-auto flex max-w-[1070px] items-center justify-between rounded-full border border-line bg-panel/95 py-1.5 pl-3 pr-1.5 backdrop-blur-xl"
           style={{ boxShadow: "0 8px 24px rgba(13,17,27,.07)" }}
@@ -299,7 +299,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
                 removed (baked alpha) so only the objects sit on the black */}
             <div className="hidden xl:block">
               <img src="/props/laptop-dark.webp" alt="" className="prop-tr absolute right-[-100px] top-[-60px] w-[460px]" loading="lazy" fetchpriority="low" />
-              <img src="/props/money-dark.webp" alt="" className="prop-l absolute left-[-200px] top-[-70px] w-[400px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
+              <img src="/props/money-dark.webp" alt="" className="absolute left-[-190px] top-[-30px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
               <img src="/props/keyboard-dark.webp" alt="" className="prop-bl absolute left-[-160px] top-[430px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
             </div>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, var(--bg))" }} />
@@ -317,28 +317,31 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
         )}
 
         <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 text-center sm:px-6 sm:pt-16">
-          <p data-reveal className="reveal mx-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium" style={{ background: "var(--accent-soft)", color: "var(--accent-text)" }}>
+          <p className="intro-rise mx-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium" style={{ background: "var(--accent-soft)", color: "var(--accent-text)", animationDelay: "0.05s" }}>
             Built for Ignition Hacks 2026 · {N_TICKERS} stocks &amp; funds · no sign-up
           </p>
 
-          <h1 data-reveal className="reveal mx-auto mt-5 max-w-2xl text-[40px] font-semibold leading-[1.12] tracking-[-0.03em] sm:text-[58px]">
-            Real quant math.
-            <br />
-            Explained like a human.
+          <h1 className="mx-auto mt-5 max-w-2xl text-[40px] font-semibold leading-[1.12] tracking-[-0.03em] sm:text-[58px]">
+            <span className="-mb-[0.12em] block overflow-hidden pb-[0.12em]">
+              <span className="intro-line" style={{ animationDelay: "0.12s" }}>Real quant math.</span>
+            </span>
+            <span className="-mb-[0.12em] block overflow-hidden pb-[0.12em]">
+              <span className="intro-line" style={{ animationDelay: "0.22s" }}>Explained like a human.</span>
+            </span>
           </h1>
 
-          <p data-reveal className="reveal mx-auto mt-4 max-w-md text-[14.5px] leading-6 text-ink3">
+          <p className="intro-rise mx-auto mt-4 max-w-md text-[14.5px] leading-6 text-ink3" style={{ animationDelay: "0.34s" }}>
             Build a portfolio and watch what it would really do: the growth, the swings,
-            even a 2008-style crash. In plain words, out loud if you want.
+            even a 2008-style crash. All of it in plain words.
           </p>
 
-          <div data-reveal className="reveal mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="intro-rise mt-7 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "0.42s" }}>
             <LaunchButton onLaunch={onLaunch}>{session ? "Open my portfolio" : "Build my portfolio"}</LaunchButton>
           </div>
 
-          <div data-reveal className="reveal mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] font-medium" style={{ color: "var(--accent-text)" }}>
-            {["Risk, live", "Return, live", "Crash test, in dollars", "Diversification, scored"].map((m) => (
-              <span key={m} className="flex items-center gap-1.5">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] font-medium" style={{ color: "var(--accent-text)" }}>
+            {["Risk, live", "Return, live", "Crash test, in dollars", "Diversification, scored"].map((m, i) => (
+              <span key={m} className="intro-rise flex items-center gap-1.5" style={{ animationDelay: `${0.5 + i * 0.07}s` }}>
                 <span className="flex h-4 w-4 items-center justify-center rounded-full" style={{ background: "var(--accent)" }} aria-hidden="true">
                   <Check size={10} color="#fff" strokeWidth={3.5} />
                 </span>
