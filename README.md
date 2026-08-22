@@ -1,4 +1,4 @@
-# Folio: AI Portfolio Optimizer (Fintech Track) - Mobbin, Render, and ElevenLabs track
+# Folio: AI Portfolio Optimizer (Fintech Track) - Mobbin, Render, and ElevenLabs
 
 An AI-powered fintech platform that uses institutional-grade quantitative risk modeling to evaluate investment portfolios, filtering out market noise to optimize asset weights. It then uses generative AI to translate these complex risk metrics into personalized, plain-English financial guidance for beginners.
 
