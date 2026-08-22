@@ -24,3 +24,6 @@ build/
 # Editor
 .vscode/
 .idea/
+
+# Product film workspace (frames are GBs; never commit)
+video/

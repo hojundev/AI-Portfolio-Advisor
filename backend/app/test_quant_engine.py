@@ -10,9 +10,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import quant_engine as qe
-import presets
-import tickers as tk
+from app import quant_engine as qe
+from app import presets
+from app import tickers as tk
 
 
 # --------------------------------------------------------------------------- #

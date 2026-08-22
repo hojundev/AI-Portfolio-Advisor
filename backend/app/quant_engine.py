@@ -30,12 +30,12 @@ import logging
 import numpy as np
 import pandas as pd
 
-from data import daily_returns, fetch_prices
+from app.data import daily_returns, fetch_prices
 
 logger = logging.getLogger(__name__)
 
 TRADING_DAYS = 252   # for annualizing daily stats
-RISK_FREE_RATE = 0.0  # simplification for the demo; expose as a param if needed
+RISK_FREE_RATE = 0.04  # ~cash yield; Sharpe over 0% flatters every portfolio
 
 
 # --------------------------------------------------------------------------- #
