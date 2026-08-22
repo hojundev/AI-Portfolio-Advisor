@@ -4,11 +4,7 @@ These are NOT optimized. They are trustworthy, real-world templates that a
 beginner can mimic on their first time investing. Each preset ships with the
 actual tickers and target weights the firm publishes.
 
-IMPORTANT — PLACEHOLDER WEIGHTS
--------------------------------
-The weights below are placeholders so the app runs end-to-end today. The
-project owner is sourcing the real allocations from each firm and will replace
-the `allocations` lists here. Rules when replacing:
+Rules when editing an allocation:
   * weights must be floats that sum to 1.0 (within a small tolerance)
   * every ticker must be a valid symbol yfinance can fetch
   * keep the id/name/description fields
@@ -22,42 +18,43 @@ from __future__ import annotations
 # fixed allocation (ticker -> weight). Replace `allocations` with real data.
 PRESETS: list[dict] = [
     {
-        "id": "all_weather",
-        "name": "All-Weather (Bridgewater-style)",
-        "description": "Balanced across stocks, bonds, and commodities to stay "
-                       "steady in any market.",
-        # TODO(owner): replace with the real published allocation.
+        "id": "berkshire_hathaway",
+        "name": "Berkshire Hathaway",
+        "description": "Warren Buffett's concentrated, blue-chip portfolio — "
+                       "durable businesses held for the long term.",
         "allocations": [
-            {"ticker": "VTI", "weight": 0.30},
-            {"ticker": "TLT", "weight": 0.40},
-            {"ticker": "IEI", "weight": 0.15},
-            {"ticker": "GLD", "weight": 0.075},
-            {"ticker": "DBC", "weight": 0.075},
+            {"ticker": "AAPL", "weight": 0.32},
+            {"ticker": "AXP", "weight": 0.25},
+            {"ticker": "KO", "weight": 0.16},
+            {"ticker": "GOOGL", "weight": 0.14},
+            {"ticker": "BAC", "weight": 0.13},
         ],
     },
     {
-        "id": "sixty_forty",
-        "name": "Classic 60/40",
-        "description": "A time-tested mix of 60% stocks for growth and 40% "
-                       "bonds for stability.",
-        # TODO(owner): replace with the real published allocation.
+        "id": "pershing_square",
+        "name": "Pershing Square",
+        "description": "Bill Ackman's concentrated bets on high-quality, "
+                       "cash-generative businesses.",
         "allocations": [
-            {"ticker": "VTI", "weight": 0.60},
-            {"ticker": "BND", "weight": 0.40},
+            {"ticker": "BN", "weight": 0.23},
+            {"ticker": "AMZN", "weight": 0.22},
+            {"ticker": "UBER", "weight": 0.20},
+            {"ticker": "MSFT", "weight": 0.19},
+            {"ticker": "QSR", "weight": 0.16},
         ],
     },
     {
-        "id": "tech_growth",
-        "name": "Tech Growth",
-        "description": "Concentrated in high-growth technology leaders. Higher "
-                       "risk, higher potential reward.",
-        # TODO(owner): replace with the real published allocation.
+        "id": "ark_innovation",
+        "name": "ARK Innovation ETF",
+        "description": "Cathie Wood's high-growth bets on disruptive innovation "
+                       "— genomics, AI, crypto, and more. Higher risk, higher "
+                       "potential reward.",
         "allocations": [
-            {"ticker": "AAPL", "weight": 0.25},
-            {"ticker": "MSFT", "weight": 0.25},
-            {"ticker": "NVDA", "weight": 0.20},
-            {"ticker": "GOOGL", "weight": 0.15},
-            {"ticker": "AMZN", "weight": 0.15},
+            {"ticker": "TSLA", "weight": 0.32},
+            {"ticker": "TEM", "weight": 0.22},
+            {"ticker": "CRSP", "weight": 0.17},
+            {"ticker": "COIN", "weight": 0.15},
+            {"ticker": "TWST", "weight": 0.14},
         ],
     },
 ]

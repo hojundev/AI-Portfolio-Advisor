@@ -79,6 +79,7 @@ function App() {
   const [newPortfolioName, setNewPortfolioName] = useState("");
   const [search, setSearch] = useState("");
   const [chatInput, setChatInput] = useState("");
+  const [budget, setBudget] = useState(10000);
   const [lightMode, setLightMode] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -115,11 +116,12 @@ function App() {
       return {
         name: stock.ticker,
         value: stock.allocation,
+        amount: (stock.allocation / 100) * budget,
         color: COLORS[index % COLORS.length],
         company: info?.name || stock.ticker,
       };
     });
-  }, [activePortfolio]);
+  }, [activePortfolio, budget]);
 
   const totalValue = useMemo(() => {
     if (!activePortfolio) return 0;
@@ -399,7 +401,15 @@ function App() {
                         borderRadius: "12px",
                         color: "#fff",
                       }}
-                      formatter={(value, name) => [`${value}%`, name]}
+                      formatter={(value, name, item) => {
+                        const amount = item?.payload?.amount ?? 0;
+                        const dollars = amount.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          maximumFractionDigits: 0,
+                        });
+                        return [`${value}%  ·  ${dollars}`, name];
+                      }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -443,6 +453,27 @@ function App() {
                   <h2 className="mt-1 text-lg font-semibold">Key metrics</h2>
                 </div>
                 <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-400"><Activity size={17} /></div>
+              </div>
+
+              <div className={`mb-4 rounded-xl border p-3 ${lightMode ? "border-slate-200 bg-slate-50" : "border-white/[0.06] bg-black/10"}`}>
+                <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+                  Investment budget
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-zinc-400">$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    value={budget}
+                    onChange={(e) => setBudget(Math.max(0, Number(e.target.value) || 0))}
+                    placeholder="10,000"
+                    className={`min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-zinc-600 ${lightMode ? "text-slate-900" : "text-white"}`}
+                  />
+                </div>
+                <p className="mt-1.5 text-[10px] text-zinc-600">
+                  Hover a pie slice to see its share of your budget.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
