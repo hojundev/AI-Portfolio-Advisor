@@ -207,7 +207,7 @@ const MARQUEE = [
 
 /* --------------------------------- landing --------------------------------- */
 
-export default function Landing({ theme, onToggleTheme, onLaunch, onLogin }) {
+export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, session }) {
   const ref = useReveal();
   // product shots match the page theme (light site gets light screenshots)
   const shotSrc = (base) => `${base}${theme === "light" ? "-light" : ""}.png`;
@@ -256,19 +256,36 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin }) {
             >
               {theme === "dark" ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
             </button>
-            <button
-              onClick={onLogin}
-              className="press rounded-full px-3.5 py-2 text-[13px] font-medium text-ink2 transition hover:bg-panel2 hover:text-ink"
-            >
-              Log in
-            </button>
-            <button
-              onClick={onLaunch}
-              className="press rounded-full px-4 py-2 text-[13px] font-semibold transition hover:opacity-90"
-              style={{ background: "var(--cta-bg)", color: "var(--cta-ink)" }}
-            >
-              Get started
-            </button>
+            {session ? (
+              <>
+                <span className="hidden px-2 text-[13px] font-medium text-ink2 sm:block">
+                  Hi, {session.name.split(/\s+/)[0]}
+                </span>
+                <button
+                  onClick={onLaunch}
+                  className="press rounded-full px-4 py-2 text-[13px] font-semibold transition hover:opacity-90"
+                  style={{ background: "var(--cta-bg)", color: "var(--cta-ink)" }}
+                >
+                  Open Folio
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={onLogin}
+                  className="press rounded-full px-3.5 py-2 text-[13px] font-medium text-ink2 transition hover:bg-panel2 hover:text-ink"
+                >
+                  Log in
+                </button>
+                <button
+                  onClick={onLaunch}
+                  className="press rounded-full px-4 py-2 text-[13px] font-semibold transition hover:opacity-90"
+                  style={{ background: "var(--cta-bg)", color: "var(--cta-ink)" }}
+                >
+                  Get started
+                </button>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -278,12 +295,12 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin }) {
         {theme === "dark" ? (
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div className="glow-drift absolute left-1/2 top-[-260px] h-[560px] w-[900px] rounded-full opacity-[0.14] blur-3xl" style={{ background: "radial-gradient(closest-side, var(--accent), transparent 70%)" }} />
-            {/* the SAME photos as light, just dimmed: their grounds become a
-                soft corner glow against the black instead of white paper */}
+            {/* the SAME photos as light, dimmed, with their paper grounds
+                removed (baked alpha) so only the objects sit on the black */}
             <div className="hidden xl:block">
-              <img src="/props/laptop.jpg" alt="" className="prop-dim prop-tr absolute right-[-100px] top-[-60px] w-[460px]" loading="lazy" fetchpriority="low" />
-              <img src="/props/money-edge.jpg" alt="" className="prop-dim prop-l absolute left-[-200px] top-[-70px] w-[400px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
-              <img src="/props/keyboard.jpg" alt="" className="prop-dim prop-bl absolute left-[-160px] top-[430px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
+              <img src="/props/laptop-dark.webp" alt="" className="prop-tr absolute right-[-100px] top-[-60px] w-[460px]" loading="lazy" fetchpriority="low" />
+              <img src="/props/money-dark.webp" alt="" className="prop-l absolute left-[-200px] top-[-70px] w-[400px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
+              <img src="/props/keyboard-dark.webp" alt="" className="prop-bl absolute left-[-160px] top-[430px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
             </div>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, var(--bg))" }} />
           </div>
@@ -316,7 +333,7 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin }) {
           </p>
 
           <div data-reveal className="reveal mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LaunchButton onLaunch={onLaunch} />
+            <LaunchButton onLaunch={onLaunch}>{session ? "Open my portfolio" : "Build my portfolio"}</LaunchButton>
           </div>
 
           <div data-reveal className="reveal mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] font-medium" style={{ color: "var(--accent-text)" }}>
@@ -357,10 +374,10 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin }) {
               <div className="float-slow">
                 <div className="hero-tilt img-blend rounded-[22px] border border-line bg-panel p-2 sm:p-2.5" style={{ boxShadow: "var(--shadow-pop)" }}>
                   <img
-                    src={shotSrc("/shot-hero")}
+                    src={theme === "light" ? "/shot-hero-light.webp" : "/shot-hero.webp"}
                     alt="The Folio dashboard: builder, allocation donut, live metrics, briefing and advisor chat"
-                    width={2240}
-                    height={1500}
+                    width={3840}
+                    height={2571}
                     loading="eager"
                     fetchpriority="high"
                     className="block h-auto w-full rounded-[14px]"

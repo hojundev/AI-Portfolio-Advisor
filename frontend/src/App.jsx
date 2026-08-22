@@ -117,7 +117,7 @@ function loadPortfolios(storeKey) {
   } catch {
     /* corrupted store — fall back */
   }
-  return { portfolios: DEFAULT_PORTFOLIOS, activeId: "classic_60_40" };
+  return { portfolios: DEFAULT_PORTFOLIOS, activeId: "classic_60_40", dismissed: [] };
 }
 
 function nextColorSlot(holdings) {
@@ -134,6 +134,7 @@ export default function App() {
   const initial = useMemo(() => loadPortfolios(portfolioStoreKey(getSession())), []);
   const [portfolios, setPortfolios] = useState(initial.portfolios);
   const [activeId, setActiveId] = useState(initial.activeId);
+  const [dismissed, setDismissed] = useState(initial.dismissed || []);
   const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || "light");
   // the investment amount every dollar figure is computed on, per profile
   const [budget, setBudget] = useState(() => loadBudget(budgetStoreKey(getSession())));
@@ -208,8 +209,8 @@ export default function App() {
   const prevStoreKey = useRef(portfolioStoreKey(session));
   useEffect(() => {
     if (portfolioStoreKey(session) !== prevStoreKey.current) return; // mid-switch: don't clobber
-    localStorage.setItem(portfolioStoreKey(session), JSON.stringify({ portfolios, activeId }));
-  }, [portfolios, activeId, session]);
+    localStorage.setItem(portfolioStoreKey(session), JSON.stringify({ portfolios, activeId, dismissed }));
+  }, [portfolios, activeId, dismissed, session]);
 
   // switching profiles swaps in that profile's saved portfolios
   useEffect(() => {
@@ -219,6 +220,7 @@ export default function App() {
     const data = loadPortfolios(key);
     setPortfolios(data.portfolios);
     setActiveId(data.activeId);
+    setDismissed(data.dismissed || []);
     setBudget(loadBudget(budgetStoreKey(session)));
     setChatByPortfolio({});
     setOptimization({ status: "idle", result: null });
@@ -424,6 +426,8 @@ export default function App() {
   const deletePortfolio = (id) => {
     const target = portfolios.find((p) => p.id === id);
     if (target?.holdings.length && !window.confirm(`Delete “${target.name}”? This can't be undone.`)) return;
+    // deleted presets stay deleted: the loader skips ids on this list
+    if (target?.preset) setDismissed((prev) => (prev.includes(id) ? prev : [...prev, id]));
     setPortfolios((prev) => {
       const next = prev.filter((p) => p.id !== id);
       if (activeId === id && next.length) setActiveId(next[0].id);
@@ -447,6 +451,7 @@ export default function App() {
     return (
       <Landing
         theme={theme}
+        session={session}
         onToggleTheme={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
         onLaunch={goToApp}
         onLogin={() => {

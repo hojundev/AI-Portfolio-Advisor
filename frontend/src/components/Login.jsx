@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { createAccount, getAccount, oauthSignIn, unlock } from "../lib/session.js";
+import { createAccount, getAccount, getSession, oauthSignIn, unlock } from "../lib/session.js";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
@@ -166,6 +166,15 @@ export default function Login({ onSignedIn, onGuest, onBack }) {
           <p className="mt-1.5 text-center text-[13px] text-ink3">
             Your portfolios, briefings, and settings, saved to your profile.
           </p>
+
+          {getSession() && (
+            <button
+              onClick={() => onSignedIn(getSession())}
+              className="press mt-6 w-full rounded-xl bg-ink py-2.5 text-sm font-semibold text-bg transition hover:opacity-85"
+            >
+              Continue as {getSession().name.split(/\s+/)[0]}
+            </button>
+          )}
 
           <div className="mt-7 space-y-2.5">
             <button
