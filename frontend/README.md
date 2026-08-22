@@ -1,33 +1,34 @@
-# PortfolioOS
+# AI Portfolio Advisor — Frontend
 
-Modern responsive financial portfolio dashboard built with:
+React + Vite + Tailwind + Recharts frontend for the portfolio advisor.
 
-- React
-- Vite
-- Tailwind CSS
-- Recharts
-- Lucide React
+## Run locally
 
-## Run
+Terminal 1:
 
 ```bash
+cd backend
+uvicorn app.main:app --reload
+```
+
+Terminal 2:
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-Open the URL shown by Vite, normally http://localhost:5173.
+Open `http://localhost:5173`.
 
-## Features
+The Vite proxy forwards `/api/*` to `http://localhost:8000`.
 
-- Dynamic portfolio tabs
-- Create custom portfolios
-- Search and add stocks
-- Remove holdings
-- Editable allocation percentages
-- Allocation sliders
-- Interactive Recharts donut chart
-- Dynamic portfolio metrics
-- Portfolio AI chat interface
-- Responsive desktop/tablet/mobile layout
+## API integration
 
-The market data and AI responses are demo data and should be replaced with production APIs for a real financial application.
+- `GET /api/presets`
+- `GET /api/tickers`
+- `POST /api/analyze`
+
+Preset IDs are read from `/api/presets`; they are not hardcoded.
+
+For production, set `VITE_API_URL` in `.env.production` to the deployed backend URL.

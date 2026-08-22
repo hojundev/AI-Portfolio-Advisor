@@ -1,89 +1,53 @@
-/**
- * Centralized API client for the Portfolio Optimizer backend.
- *
- * In development the Vite dev-server proxy forwards /api/* to localhost:8000.
- * In production set the VITE_API_URL env var to the deployed Render URL
- * (e.g. "https://portfolio-optimizer-api.onrender.com").  If the var is unset
- * the client uses a relative path, which works with the Vite proxy.
- */
-
-const BASE = import.meta.env.VITE_API_URL ?? "";
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, options);
-  if (!res.ok) {
-    // Try to pull a `detail` message from FastAPI's error shape.
-    let message = `Request failed (${res.status})`;
-    try {
-      const body = await res.json();
-      if (body.detail) message = body.detail;
-    } catch {
-      // ignore — use the generic message
-    }
-    throw new Error(message);
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    ...options,
+  });
+
+  let body = null;
+  try {
+    body = await response.json();
+  } catch {
+    // Keep the original status for non-JSON failures.
   }
-  return res.json();
+
+  if (!response.ok) {
+    const message =
+      body?.detail ||
+      body?.message ||
+      body?.error ||
+      `Request failed (${response.status})`;
+    throw new Error(typeof message === "string" ? message : JSON.stringify(message));
+  }
+
+  return body;
 }
 
-/**
- * Convert a backend allocation (weight 0–1) to the UI shape (allocation 0–100).
- * This is the ONLY place the conversion happens so the rest of the app can
- * treat allocation as a whole-number percentage.
- */
-function normalizeAllocations(allocations) {
-  return allocations.map((a) => ({
-    ticker: a.ticker,
-    allocation: Math.round(a.weight * 10000) / 100, // 0.3214 → 32.14
-  }));
-}
-
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
-/**
- * GET /api/presets
- * Returns: { presets: [{ id, name, description, allocations: [{ticker, weight}] }] }
- *
- * We normalize allocations to 0–100 on the way in.
- */
 export async function fetchPresets() {
-  const data = await request("/api/presets");
-  return data.presets.map((p) => ({
-    ...p,
-    allocations: normalizeAllocations(p.allocations),
-  }));
+  return request("/api/presets");
 }
 
-/**
- * GET /api/tickers
- * Returns: { tickers: [{ symbol, name }] }
- */
 export async function fetchTickers() {
-  const data = await request("/api/tickers");
-  return data.tickers; // [{ symbol, name }]
+  return request("/api/tickers");
 }
 
-/**
- * POST /api/analyze
- *
- * @param {{ mode: "custom"|"preset", tickers?: string[], preset_id?: string }} payload
- * Returns: { allocations: [{ticker, allocation}], metrics, ai_insight }
- *          (allocations already converted to 0–100)
- */
 export async function analyzePortfolio(payload) {
-  const data = await request("/api/analyze", {
+  const result = await request("/api/analyze", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+
   return {
-    allocations: normalizeAllocations(data.allocations),
-    metrics: data.metrics,
-    ai_insight: data.ai_insight,
+    ...result,
+    allocations: (result.allocations || []).map((item) => {
+      if (typeof item === "object" && item !== null) {
+        const symbol = item.symbol ?? item.ticker ?? item.name;
+        const raw = Number(item.allocation ?? item.weight ?? item.value ?? 0);
+        return { ...item, symbol, allocation: raw <= 1 ? raw * 100 : raw };
+      }
+      return null;
+    }).filter(Boolean),
   };
 }
