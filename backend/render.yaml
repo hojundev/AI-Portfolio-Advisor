@@ -2,6 +2,7 @@ services:
   - type: web
     name: portfolio-optimizer-api
     runtime: python
+    pythonVersion: "3.12.7"
     plan: free
     # Run from backend/ where requirements.txt lives and app.main resolves.
     rootDir: backend
