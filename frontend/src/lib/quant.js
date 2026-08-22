@@ -398,24 +398,34 @@ export function buildNarrative(portfolio, m) {
   return parts.join(" ");
 }
 
-/** Local stand-in for the backend's Gemini insight, in the same friendly voice. */
-export function explainOptimization(allocations, metrics) {
+/** On-device stand-in for the backend's Gemini insight, in the same friendly
+ *  voice. engine: "local" describes inverse-vol reasoning; "spectral" keeps
+ *  the wording honest when the weights came from the cloud's spectral method
+ *  (its slices aren't sized by volatility alone, so no causal claims). */
+export function explainOptimization(allocations, metrics, engine = "local") {
   if (!allocations?.length) return "";
   const sorted = [...allocations].sort((a, b) => b.weight - a.weight);
   const biggest = sorted[0];
   const smallest = sorted[sorted.length - 1];
   const bigT = lookup(biggest.ticker);
   const smallT = lookup(smallest.ticker);
+  const spectral = engine === "spectral";
   const sentences = [
-    `The engine sized positions by stability: steadier assets absorb more capital, jumpier ones less.`,
+    spectral
+      ? `The engine kept the informative co-movement patterns in a year of market data and sized positions around them.`
+      : `The engine sized positions by stability: steadier assets absorb more capital, jumpier ones less.`,
   ];
   if (bigT)
     sentences.push(
-      `${biggest.ticker} gets the largest slice (${(biggest.weight * 100).toFixed(1)}%) because its ${(bigT.v * 100).toFixed(0)}% volatility is among the lowest in your basket.`
+      spectral
+        ? `${biggest.ticker} carries the largest slice at ${(biggest.weight * 100).toFixed(1)}%.`
+        : `${biggest.ticker} gets the largest slice (${(biggest.weight * 100).toFixed(1)}%) because its ${(bigT.v * 100).toFixed(0)}% volatility is among the lowest in your basket.`
     );
   if (smallT && smallest.ticker !== biggest.ticker)
     sentences.push(
-      `${smallest.ticker} is trimmed to ${(smallest.weight * 100).toFixed(1)}%; at ${(smallT.v * 100).toFixed(0)}% volatility it would otherwise dominate the portfolio's swings.`
+      spectral
+        ? `${smallest.ticker} lands at ${(smallest.weight * 100).toFixed(1)}%.`
+        : `${smallest.ticker} is trimmed to ${(smallest.weight * 100).toFixed(1)}%; at ${(smallT.v * 100).toFixed(0)}% volatility it would otherwise dominate the portfolio's swings.`
     );
   sentences.push(
     `Together that lands at roughly ${(metrics.expected_return * 100).toFixed(1)}% expected return for ${(metrics.volatility * 100).toFixed(1)}% volatility (Sharpe ${metrics.sharpe_ratio.toFixed(2)}).`

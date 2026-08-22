@@ -67,6 +67,15 @@ export async function analyze(symbols) {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data.allocations) && data.metrics) {
+          // Gemini key missing / free-tier quota gone → the backend sends one
+          // canned paragraph. Keep the cloud's spectral weights but swap in
+          // the on-device explanation so the rationale stays specific.
+          if (
+            !data.ai_insight ||
+            data.ai_insight.startsWith("Your portfolio was optimized to balance risk and return")
+          ) {
+            data.ai_insight = explainOptimization(data.allocations, data.metrics, "spectral");
+          }
           return { ...data, source: "cloud" };
         }
       }

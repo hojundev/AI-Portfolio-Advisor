@@ -305,17 +305,19 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
         </div>
       </nav>
 
-      {/* hero — Acctual centered layout with edge-prop collage */}
-      <header className="relative overflow-hidden">
+      {/* hero — Acctual centered layout with edge-prop collage. The header
+          slides up behind the nav (-mt/pt pair) so its overflow clip sits at
+          the true page top: props bleed off-screen instead of cutting mid-page */}
+      <header className="relative -mt-[50px] overflow-hidden pt-[50px]">
         {theme === "dark" ? (
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div className="glow-drift absolute left-1/2 top-[-260px] h-[560px] w-[900px] rounded-full opacity-[0.14] blur-3xl" style={{ background: "radial-gradient(closest-side, var(--accent), transparent 70%)" }} />
             {/* the SAME photos as light, dimmed, with their paper grounds
                 removed (baked alpha) so only the objects sit on the black */}
             <div className="hidden xl:block">
-              <img src="/props/laptop-dark.webp" alt="" className="prop-tr absolute right-[-100px] top-[-60px] w-[460px]" loading="lazy" fetchpriority="low" />
+              <img src="/props/laptop-dark.webp" alt="" className="prop-tr absolute right-[-100px] top-[-10px] w-[460px]" loading="lazy" fetchpriority="low" />
               <img src="/props/money-dark.webp" alt="" className="absolute left-[-190px] top-[-30px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
-              <img src="/props/keyboard-dark.webp" alt="" className="prop-bl absolute left-[-160px] top-[430px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
+              <img src="/props/keyboard-dark.webp" alt="" className="prop-bl absolute left-[-160px] top-[470px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
             </div>
             <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 55%, var(--bg))" }} />
           </div>
@@ -325,9 +327,9 @@ export default function Landing({ theme, onToggleTheme, onLaunch, onLogin, sessi
                 license): one consistent bird's-eye perspective across all three.
                 All lazy + low priority: hidden below xl (never fetched there),
                 and on xl they must not compete with the LCP hero screenshot */}
-            <img src="/props/laptop.jpg" alt="" className="prop-fade prop-crisp prop-tr absolute right-[-100px] top-[-60px] w-[460px]" loading="lazy" fetchpriority="low" />
-            <img src="/props/money-edge.jpg" alt="" className="prop-fade prop-bright prop-l absolute left-[-200px] top-[-70px] w-[400px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
-            <img src="/props/keyboard.jpg" alt="" className="prop-fade prop-bl absolute left-[-160px] top-[430px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
+            <img src="/props/laptop.jpg" alt="" className="prop-fade prop-tr absolute right-[-100px] top-[-10px] w-[460px]" loading="lazy" fetchpriority="low" />
+            <img src="/props/money-full.jpg" alt="" className="prop-fade absolute left-[-190px] top-[-30px] w-[440px] rotate-[-8deg]" loading="lazy" fetchpriority="low" />
+            <img src="/props/keyboard.jpg" alt="" className="prop-fade prop-bl absolute left-[-160px] top-[470px] w-[460px] rotate-[18deg]" loading="lazy" fetchpriority="low" />
           </div>
         )}
 

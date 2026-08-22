@@ -1,4 +1,4 @@
 All photos: Pexels free license, no attribution required (https://www.pexels.com/license/)
-laptop.jpg       https://www.pexels.com/photo/gray-laptop-computer-238118/ (cropped)
-money-edge.jpg   https://www.pexels.com/photo/fan-of-banknotes-14820437/ (mirrored + cropped)
-keyboard.jpg     (original download, Pexels)
+laptop.jpg / laptop-dark.webp        https://www.pexels.com/photo/gray-laptop-computer-238118/ (cropped, white-point normalized; -dark has a baked darkness matte)
+money-full.jpg / money-dark.webp     https://www.pexels.com/photo/fan-of-banknotes-14820437/ (same crop both themes, normalized; -dark has the ground removed)
+keyboard.jpg / keyboard-dark.webp    (original download, Pexels; normalized; -dark has a baked darkness matte)

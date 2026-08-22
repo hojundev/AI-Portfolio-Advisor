@@ -283,18 +283,10 @@ input[type="number"] {
    then multiply-blended — the photo background vanishes into the page and
    only the object remains. Masks are DIRECTIONAL: the edge hanging off-screen
    stays solid (crisp object), only the edge facing the page content feathers. */
+/* the prop JPGs are white-point normalized (ground = exact neutral white),
+   so multiply alone melts them into whatever the page color is */
 .prop-fade {
   mix-blend-mode: multiply;
-  filter: brightness(1.09) saturate(1.03);
-}
-/* per-photo tuning: light-bodied objects wash out if over-brightened;
-   dark objects on grayish grounds need a stronger lift */
-.prop-crisp {
-  filter: brightness(1.06) contrast(1.06) saturate(1.02);
-}
-.prop-bright {
-  /* warm-cast photo: brighten until the ground clips white, pull the cream out */
-  filter: brightness(1.24) saturate(0.9);
 }
 .prop-tr {
   /* solid at top-right, feathers toward bottom-left */
