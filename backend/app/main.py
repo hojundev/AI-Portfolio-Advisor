@@ -12,6 +12,7 @@ from app.quant_engine import calculate_optimal_portfolio, compute_metrics
 from app.presets import get_presets as _get_presets, get_preset
 from app.ai_insight import generate_insight
 from app.data import DataError
+from app.tickers import get_ticker_universe
 
 app = FastAPI(title="AI Portfolio Optimizer API")
 
@@ -35,6 +36,12 @@ def health_check():
 def get_presets():
     """List the fixed company presets for the frontend's left-panel tabs."""
     return {"presets": _get_presets()}
+
+
+@app.get("/api/tickers")
+def get_tickers():
+    """Return the curated ticker universe for the frontend search bar."""
+    return {"tickers": get_ticker_universe()}
 
 
 @app.post("/api/analyze", response_model=AnalyzeResponse)
